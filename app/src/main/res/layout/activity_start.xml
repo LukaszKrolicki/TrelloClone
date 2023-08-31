@@ -23,6 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Projemenage"
+            android:id="@+id/appName"
             android:textColor="@color/colorPrimary"
             android:textStyle="bold"
             android:textSize="50dp"
@@ -82,22 +83,30 @@
         android:layout_marginVertical="100dp"
         app:layout_constraintStart_toStartOf="parent">
 
-        <Button
+        <android.widget.Button
             android:id="@+id/signUp"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:layout_marginHorizontal="100dp"
+            android:layout_marginBottom="10dp"
             android:text="Sign In"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:background="@drawable/shape_button_rounded"
             />
 
-        <Button
+        <android.widget.Button
             android:id="@+id/join"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
             android:layout_marginHorizontal="100dp"
-            android:text="Join Community" />
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_rounded_outlined"
+            android:text="Join Community"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
