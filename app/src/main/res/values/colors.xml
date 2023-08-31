@@ -17,4 +17,5 @@
     <color name="grey">#D3D3D3</color>
 
     <color name="toolbar_color_normal">#000000</color>
+    <color name="snackbar_error">#f72400</color>
 </resources>

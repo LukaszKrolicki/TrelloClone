@@ -1,4 +1,4 @@
-package eu.pl.snk.senseibunny.trelloclone
+package eu.pl.snk.senseibunny.trelloclone.Activities
 
 import android.content.Intent
 import android.graphics.Typeface
@@ -26,7 +26,7 @@ class SplashActivity : AppCompatActivity() {
         binding!!.titleId.typeface=typeFace
 
         Handler().postDelayed({
-            startActivity(Intent(this,StartActivity::class.java))
+            startActivity(Intent(this, StartActivity::class.java))
             finish()
         },2500)
     }

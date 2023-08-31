@@ -1,11 +1,10 @@
-package eu.pl.snk.senseibunny.trelloclone
+package eu.pl.snk.senseibunny.trelloclone.Activities
 
 import android.content.Intent
 import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.WindowManager
-import eu.pl.snk.senseibunny.trelloclone.databinding.ActivitySplashBinding
 import eu.pl.snk.senseibunny.trelloclone.databinding.ActivityStartBinding
 
 class StartActivity : AppCompatActivity() {
