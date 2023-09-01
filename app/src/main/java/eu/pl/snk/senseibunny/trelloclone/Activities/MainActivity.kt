@@ -71,6 +71,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         when (item.itemId) {
             R.id.nav_my_profile -> {
                 Toast.makeText(this, "My profile", Toast.LENGTH_SHORT).show()
+                var intent = Intent(this, ProfileActivity::class.java)
+                startActivity(intent)
             }
             R.id.nav_sign_out -> {
                 FirebaseAuth.getInstance().signOut()
@@ -94,15 +96,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
     }
 
-    fun loadImageFromUrl(context: Context, imageUrl: String, imageView: CircleImageView) {
-        val requestOptions = RequestOptions()
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .centerCrop()
 
-        Glide.with(context)
-            .load(imageUrl)
-            .apply(requestOptions)
-            .into(imageView)
-    }
 
 }

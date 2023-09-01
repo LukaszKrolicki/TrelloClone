@@ -4,10 +4,7 @@ import android.app.Activity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
-import eu.pl.snk.senseibunny.trelloclone.Activities.BaseActivity
-import eu.pl.snk.senseibunny.trelloclone.Activities.MainActivity
-import eu.pl.snk.senseibunny.trelloclone.Activities.SingInActivity
-import eu.pl.snk.senseibunny.trelloclone.Activities.SingUpActivity
+import eu.pl.snk.senseibunny.trelloclone.Activities.*
 import models.User
 
 class FireStoreClass: BaseActivity() {
@@ -26,6 +23,9 @@ class FireStoreClass: BaseActivity() {
                         }
                         is MainActivity ->{
                             activity.UpdateNavigationUserDetails(loggedInUser)
+                        }
+                        is ProfileActivity->{
+                            activity.profileDetails(loggedInUser)
                         }
                     }
 
