@@ -1,5 +1,6 @@
 package eu.pl.snk.senseibunny.trelloclone.Activities
 
+import Firebase.FireStoreClass
 import android.content.Intent
 import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +24,7 @@ class StartActivity : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
         )
+
 
         binding?.join?.setOnClickListener{
             val intent = Intent(this, SingUpActivity::class.java)

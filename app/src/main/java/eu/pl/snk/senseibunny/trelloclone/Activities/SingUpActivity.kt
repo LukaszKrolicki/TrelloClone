@@ -1,5 +1,6 @@
 package eu.pl.snk.senseibunny.trelloclone.Activities
 
+import Firebase.FireStoreClass
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
@@ -7,6 +8,7 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import eu.pl.snk.senseibunny.trelloclone.databinding.ActivitySingUpBinding
+import models.User
 
 class SingUpActivity : BaseActivity() {
 
@@ -66,14 +68,23 @@ class SingUpActivity : BaseActivity() {
                 if (task.isSuccessful) {
                     val firebaseUser: FirebaseUser = task.result!!.user!!
                     val registeredEmail = firebaseUser.email!!
-                    Toast.makeText(this, "You have registered!!", Toast.LENGTH_LONG).show()
-                    FirebaseAuth.getInstance().signOut() //for now we looging him off
-                    finish()
+
+                    val user = User(firebaseUser.uid, name,registeredEmail)
+                    FireStoreClass().registerUser(this,user)
+
                 } else {
                     Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show()
                 }
             }
         }
+    }
+
+
+    fun userRegisteredSuccess(){
+        Toast.makeText(this, "Registered success", Toast.LENGTH_LONG).show()
+        hideProgressDialog()
+        FirebaseAuth.getInstance().signOut() //for now we looging him off
+        finish()
     }
     override fun onDestroy() {
         super.onDestroy()
