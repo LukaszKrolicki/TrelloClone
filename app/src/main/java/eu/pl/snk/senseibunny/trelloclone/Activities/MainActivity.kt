@@ -1,18 +1,24 @@
 package eu.pl.snk.senseibunny.trelloclone.Activities
 
+import Firebase.FireStoreClass
+import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.WindowManager
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.GravityCompat
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import de.hdodenhof.circleimageview.CircleImageView
 import eu.pl.snk.senseibunny.trelloclone.R
 import eu.pl.snk.senseibunny.trelloclone.databinding.ActivityMainBinding
-import eu.pl.snk.senseibunny.trelloclone.databinding.ActivitySingUpBinding
-import eu.pl.snk.senseibunny.trelloclone.databinding.MainConentBinding
+import models.User
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener{
 
@@ -29,6 +35,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         )
 
         setupActionBar()
+
+        FireStoreClass().signInUser(this)
     }
 
     private fun setupActionBar(){
@@ -76,4 +84,25 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
         return true
     }
+
+    fun UpdateNavigationUserDetails(user: User){
+        val imageView = findViewById<CircleImageView>(R.id.user_image)
+        user.image?.let { loadImageFromUrl(this, it,imageView) }
+        val textView = findViewById<TextView>(R.id.tv_username)
+        if(user.name!=null){
+            textView.setText(user.name.toString())
+        }
+    }
+
+    fun loadImageFromUrl(context: Context, imageUrl: String, imageView: CircleImageView) {
+        val requestOptions = RequestOptions()
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .centerCrop()
+
+        Glide.with(context)
+            .load(imageUrl)
+            .apply(requestOptions)
+            .into(imageView)
+    }
+
 }
