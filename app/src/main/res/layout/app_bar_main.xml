@@ -17,6 +17,22 @@
             app:popupTheme="@style/AppTheme.PopupOverlay"
             android:id="@+id/toolbar_main_activity"/>
 
+
     </com.google.android.material.appbar.AppBarLayout>
+
+    <include layout="@layout/main_conent"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:id="@+id/floatinButton"
+        android:layout_margin="24sp"
+        android:backgroundTint="@color/colorPrimary"
+        android:src="@drawable/baseline_add_to_photos_24"
+        />
+
+
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

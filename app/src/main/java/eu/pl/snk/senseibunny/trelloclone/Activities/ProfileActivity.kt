@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import android.Manifest
+import android.app.Activity
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
@@ -172,7 +173,11 @@ class ProfileActivity : BaseActivity() {
     private fun updateUserProfile(){
         val userHashMap= HashMap<String, Any>()
         var anyChangesMade=false
-        Log.e("name", userDetails.name.toString())
+
+        if(profileImageUrl!!.isNotEmpty()){
+            userHashMap["image"]= profileImageUrl!!
+            anyChangesMade=true
+        }
 
         if(binding?.nameEditText?.toString()!=userDetails.name.toString()){
             userHashMap["name"]= binding?.nameEditText?.text.toString()
@@ -194,7 +199,13 @@ class ProfileActivity : BaseActivity() {
     }
 
     fun profileUpdateSuccess(){
+        setResult(Activity.RESULT_OK)
         finish()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding=null
     }
 
 }

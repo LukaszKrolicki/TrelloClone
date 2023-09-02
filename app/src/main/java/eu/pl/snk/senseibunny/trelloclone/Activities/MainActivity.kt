@@ -1,18 +1,22 @@
 package eu.pl.snk.senseibunny.trelloclone.Activities
 
 import Firebase.FireStoreClass
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.GravityCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import de.hdodenhof.circleimageview.CircleImageView
@@ -23,6 +27,16 @@ import models.User
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener{
 
     var binding : ActivityMainBinding ?=null
+
+    private val startUpdateActivityAndGetResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                FireStoreClass().signInUser(this) //what should be done if next activity end
+            } else {
+                Log.e("onActivityResult()", "Profile update cancelled by user")
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -37,6 +51,15 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         setupActionBar()
 
         FireStoreClass().signInUser(this)
+
+        val boardButton= findViewById<FloatingActionButton>(R.id.floatinButton)
+        boardButton.setOnClickListener{
+            val intent = Intent(this, BoardActivity::class.java)
+            startActivity(intent)
+        }
+
+
+
     }
 
     private fun setupActionBar(){
@@ -70,9 +93,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_my_profile -> {
-                Toast.makeText(this, "My profile", Toast.LENGTH_SHORT).show()
-                var intent = Intent(this, ProfileActivity::class.java)
-                startActivity(intent)
+                startUpdateActivityAndGetResult.launch(Intent(this, ProfileActivity::class.java))
+
             }
             R.id.nav_sign_out -> {
                 FirebaseAuth.getInstance().signOut()
@@ -96,6 +118,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
     }
 
-
+    override fun onDestroy() {
+        super.onDestroy()
+        binding=null
+    }
 
 }
