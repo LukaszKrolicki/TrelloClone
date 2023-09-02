@@ -1,6 +1,7 @@
 package Firebase
 
 import android.app.Activity
+import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
@@ -39,6 +40,18 @@ class FireStoreClass: BaseActivity() {
         mFirestore.collection("Users")//creating collection
             .document(getCurrentUserId()).set(userInfo, SetOptions.merge()).addOnSuccessListener {
                 activity.userRegisteredSuccess()
+            }
+    }
+
+
+    fun updateUserProfile(activity: ProfileActivity, userHashMap:HashMap<String, Any>){
+        mFirestore.collection("Users")//creating collection
+            .document(getCurrentUserId()).update(userHashMap).addOnSuccessListener {
+                Toast.makeText(activity,"Update success", Toast.LENGTH_LONG).show()
+                activity.profileUpdateSuccess()
+            }.addOnFailureListener{
+                activity.hideProgressDialog()
+                Toast.makeText(activity,"Update failure", Toast.LENGTH_LONG).show()
             }
     }
 
