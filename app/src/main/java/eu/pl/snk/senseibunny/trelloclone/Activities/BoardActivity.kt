@@ -1,22 +1,34 @@
 package eu.pl.snk.senseibunny.trelloclone.Activities
 
+import Firebase.FireStoreClass
 import android.Manifest
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
+import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import de.hdodenhof.circleimageview.CircleImageView
 import eu.pl.snk.senseibunny.trelloclone.databinding.ActivityBoardBinding
 import eu.pl.snk.senseibunny.trelloclone.databinding.ActivityMainBinding
+import models.Board
 
 class BoardActivity : BaseActivity() {
 
     private var binding: ActivityBoardBinding?=null
+
+    private lateinit var userName: String
+
+    private var imageUri: Uri? = null
+    private var imageUrl: String? = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,15 +44,101 @@ class BoardActivity : BaseActivity() {
             onBackPressed()
         }
 
+        if(intent.hasExtra("name")){
+            userName= intent.getStringExtra("name").toString()
+        }
+
         binding?.imageView?.setOnClickListener {
             requestStoragePermission()
         }
+
+        binding?.updateButton?.setOnClickListener{
+            if(imageUri!=null){
+                uploadBoardImage()
+            }
+            else{
+                showProgressDialog()
+                createBoard()
+            }
+        }
     }
+
+
+    fun boardCreatedSuccessfully(){
+        hideProgressDialog()
+        finish()
+    }
+
+    private fun uploadBoardImage(){
+        showProgressDialog()
+
+        if(imageUri!=null){
+
+            val sRef : StorageReference = FirebaseStorage.getInstance().reference.child("BOARD_IMAGE"+ System.currentTimeMillis()+ "."+getFileExtension(imageUri)) //send to the storage
+            sRef.putFile(imageUri!!).addOnSuccessListener {
+                    it->
+                Log.e("Firebase Image Url", it.metadata!!.reference!!.downloadUrl.toString())
+
+                it.metadata!!.reference!!.downloadUrl.addOnSuccessListener {
+                        uri->
+                    Log.e("Downloadable Image Url", uri.toString())
+                    imageUrl=uri.toString()
+                    createBoard()
+                }
+            }.addOnFailureListener{
+                    exception ->
+                Toast.makeText(this, exception.message, Toast.LENGTH_LONG).show()
+                hideProgressDialog()
+            }
+        }
+    }
+
+    private fun getFileExtension(uri: Uri?): String? { //get link type fe. png
+        return MimeTypeMap.getSingleton().getExtensionFromMimeType(uri?.let {
+            contentResolver.getType(
+                it
+            )
+        })
+    }
+
+    private fun createBoard(){
+        val boardHashMap= HashMap<String, Any>()
+        var anyChangesMade=false
+
+        if(imageUrl!!.isNotEmpty()){
+            boardHashMap["image"]= imageUrl!!
+            anyChangesMade=true
+        }
+        else{
+            boardHashMap["image"]=""
+        }
+
+        if(binding?.nameEditText?.toString()!!.isNotEmpty()){
+            boardHashMap["name"]= binding?.nameEditText?.text.toString()
+            anyChangesMade=true
+        }
+
+
+        if(anyChangesMade){
+            val assignedUsersArrayList: ArrayList<String> = ArrayList()
+            assignedUsersArrayList.add(getCurrentId()) // adding the current user id.
+            val x: Board = Board(boardHashMap["name"] as String, boardHashMap["image"] as String,
+                userName.toString(),assignedUsersArrayList)
+            FireStoreClass().createBoard(this, x)
+        }
+    }
+
+
+
+
+
+
 
     private val GalleryLaucnher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result->
             if(result.resultCode== RESULT_OK && result.data!=null){
                 val imageBackground: CircleImageView? = binding?.imageView
+                imageUri = result.data?.data
                 imageBackground?.setImageURI(result.data?.data) // setting background of our app
             }
         }
@@ -94,6 +192,8 @@ class BoardActivity : BaseActivity() {
         builder.setPositiveButton("Cancel"){dialog, _->dialog.dismiss()}
         builder.create().show()
     }
+
+
 
 
 

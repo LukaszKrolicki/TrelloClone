@@ -6,6 +6,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import eu.pl.snk.senseibunny.trelloclone.Activities.*
+import models.Board
 import models.User
 
 class FireStoreClass: BaseActivity() {
@@ -43,6 +44,18 @@ class FireStoreClass: BaseActivity() {
             }
     }
 
+    public fun createBoard(activity:BoardActivity, board: Board){
+        mFirestore.collection("Boards")//creating collection
+            .document().set(board, SetOptions.merge()).addOnSuccessListener {
+                Toast.makeText(activity, "board created", Toast.LENGTH_SHORT).show()
+                activity.boardCreatedSuccessfully()
+            }.addOnFailureListener{
+                Toast.makeText(activity, "board error", Toast.LENGTH_SHORT).show()
+
+            }
+    }
+
+
 
     fun updateUserProfile(activity: ProfileActivity, userHashMap:HashMap<String, Any>){
         mFirestore.collection("Users")//creating collection
@@ -54,7 +67,6 @@ class FireStoreClass: BaseActivity() {
                 Toast.makeText(activity,"Update failure", Toast.LENGTH_LONG).show()
             }
     }
-
 
     fun getCurrentUserId():String {
         var currentUser = FirebaseAuth.getInstance().currentUser

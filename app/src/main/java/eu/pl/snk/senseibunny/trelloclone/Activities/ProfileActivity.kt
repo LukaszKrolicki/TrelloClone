@@ -29,7 +29,7 @@ class ProfileActivity : BaseActivity() {
 
     private var binding: ActivityProfileBinding? = null
     private var imageUri: Uri? = null
-    private var profileImageUrl: String? = null
+    private var profileImageUrl: String =""
 
     private lateinit var  userDetails: User
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,6 +58,7 @@ class ProfileActivity : BaseActivity() {
                 uploadUserImage()
             }
             else{
+
                 updateUserProfile()
             }
         }
@@ -100,8 +101,8 @@ class ProfileActivity : BaseActivity() {
 
                     //Getting into gallery
 
-                        val pickInent= Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                        GalleryLaucnher.launch(pickInent)
+                    val pickInent= Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                    GalleryLaucnher.launch(pickInent)
 
                 }
                 else{
@@ -145,17 +146,17 @@ class ProfileActivity : BaseActivity() {
 
             val sRef :StorageReference = FirebaseStorage.getInstance().reference.child("USER_IMAGE"+ System.currentTimeMillis()+ "."+getFileExtension(imageUri)) //send to the storage
             sRef.putFile(imageUri!!).addOnSuccessListener {
-                it->
+                    it->
                 Log.e("Firebase Image Url", it.metadata!!.reference!!.downloadUrl.toString())
 
                 it.metadata!!.reference!!.downloadUrl.addOnSuccessListener {
-                    uri->
+                        uri->
                     Log.e("Downloadable Image Url", uri.toString())
                     profileImageUrl=uri.toString()
                     updateUserProfile()
                 }
             }.addOnFailureListener{
-                exception ->
+                    exception ->
                 Toast.makeText(this, exception.message, Toast.LENGTH_LONG).show()
                 hideProgressDialog()
             }
@@ -175,7 +176,7 @@ class ProfileActivity : BaseActivity() {
         var anyChangesMade=false
 
         if(profileImageUrl!!.isNotEmpty()){
-            userHashMap["image"]= profileImageUrl!!
+            userHashMap["image"]= profileImageUrl
             anyChangesMade=true
         }
 
@@ -199,13 +200,14 @@ class ProfileActivity : BaseActivity() {
     }
 
     fun profileUpdateSuccess(){
-        setResult(Activity.RESULT_OK)
+
         finish()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         binding=null
+        setResult(Activity.RESULT_OK)
     }
 
 }

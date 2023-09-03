@@ -28,6 +28,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     var binding : ActivityMainBinding ?=null
 
+    private lateinit var userName: String
+
     private val startUpdateActivityAndGetResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -55,6 +57,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         val boardButton= findViewById<FloatingActionButton>(R.id.floatinButton)
         boardButton.setOnClickListener{
             val intent = Intent(this, BoardActivity::class.java)
+            intent.putExtra("name",userName)
             startActivity(intent)
         }
 
@@ -111,6 +114,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     fun UpdateNavigationUserDetails(user: User){
         val imageView = findViewById<CircleImageView>(R.id.user_image)
+        userName = user.name.toString()
         user.image?.let { loadImageFromUrl(this, it,imageView) }
         val textView = findViewById<TextView>(R.id.tv_username)
         if(user.name!=null){
