@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:orientation="vertical"
+    android:layout_marginBottom="10sp">
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="10sp"
+        >
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imageViewBoard"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:src="@drawable/baseline_account_circle_24"
+            />
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10sp"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/name_board"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5sp"
+                android:text="No cards available"/>
+            <TextView
+                android:id="@+id/created_by_biard"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="No cards available"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
