@@ -14,7 +14,7 @@ class FireStoreClass: BaseActivity() {
     private val mFirestore = FirebaseFirestore.getInstance()
 
 
-    fun signInUser(activity: Activity){
+    fun signInUser(activity: Activity, readBoardList:Boolean = false){
         mFirestore.collection("Users")//creating collection
             .document(getCurrentUserId()).get().addOnSuccessListener {document->
                 val loggedInUser = document.toObject(User::class.java)//we retrieve from collection and make a user class
@@ -24,7 +24,7 @@ class FireStoreClass: BaseActivity() {
                             activity.signInSuccess(loggedInUser)
                         }
                         is MainActivity ->{
-                            activity.UpdateNavigationUserDetails(loggedInUser)
+                            activity.UpdateNavigationUserDetails(loggedInUser, readBoardList)
                         }
                         is ProfileActivity->{
                             activity.profileDetails(loggedInUser)
@@ -65,6 +65,23 @@ class FireStoreClass: BaseActivity() {
             }.addOnFailureListener{
                 activity.hideProgressDialog()
                 Toast.makeText(activity,"Update failure", Toast.LENGTH_LONG).show()
+            }
+    }
+
+    fun getBoardsList(activity: MainActivity){
+        mFirestore.collection("Boards")
+            .whereArrayContains("assignedTo", getCurrentUserId()) //checking boards collection if board is assigned to current user
+            .get().addOnSuccessListener {
+                document ->
+                    val boardList: ArrayList<Board> = ArrayList()
+                    for(i in document){
+                        boardList.add(i.toObject(Board::class.java))
+                        activity.poupulateBoardsList(boardList)
+                    }
+
+            }.addOnFailureListener{
+                hideProgressDialog()
+                Toast.makeText(activity, "Failure", Toast.LENGTH_LONG).show()
             }
     }
 
